@@ -28,7 +28,7 @@ export interface ElementStyle {
   cursor?: string;
 }
 
-export type ElementType = 'note' | 'image' | 'video' | 'gif' | 'sticker' | 'music';
+export type ElementType = 'note' | 'label' | 'textEditor' | 'expandableNote' | 'protectedNote' | 'image' | 'video' | 'gif' | 'sticker' | 'music' | 'youtube';
 
 export interface MemoryElement {
   id: string;
@@ -36,6 +36,9 @@ export interface MemoryElement {
   position: Position;
   size: Size;
   content: string;
+  rotation?: number;
+  isExpanded?: boolean;
+  isLocked?: boolean;
   style?: ElementStyle;
   metadata?: {
     title?: string;
@@ -44,10 +47,27 @@ export interface MemoryElement {
     tags?: string[];
     url?: string;
     thumbnailUrl?: string;
+    customThumbnailUrl?: string;
+    isEmbedded?: boolean;
+    isProtected?: boolean;
+    passwordHash?: string;
+    pinHash?: string;
+    format?: 'html' | 'markdown' | 'plain';
+    expandedSize?: Size;
+    collapsedSize?: Size;
   };
 }
 
 export interface CanvasState {
   elements: MemoryElement[];
   viewport: Viewport;
+}
+
+export interface DragState {
+  isDragging: boolean;
+  isResizing: boolean;
+  isRotating: boolean;
+  currentPosition?: Position;
+  currentSize?: Size;
+  currentRotation?: number;
 }

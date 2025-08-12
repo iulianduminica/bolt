@@ -75,6 +75,89 @@ function App() {
           boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
         }
       });
+    } else if (isAddingElement === 'label') {
+      addElement({
+        type: 'label',
+        position: { x, y },
+        size: { width: 120, height: 40 },
+        content: 'Label',
+        style: {
+          backgroundColor: '#dcfce7',
+          color: '#166534',
+          fontSize: 14,
+          padding: 8,
+          borderRadius: 6,
+          fontFamily: 'Inter',
+          fontWeight: 600,
+          textAlign: 'center' as const,
+          boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.1)'
+        }
+      });
+    } else if (isAddingElement === 'textEditor') {
+      addElement({
+        type: 'textEditor',
+        position: { x, y },
+        size: { width: 300, height: 200 },
+        content: '<p>Rich text content...</p>',
+        metadata: {
+          format: 'html'
+        },
+        style: {
+          backgroundColor: '#ffffff',
+          color: '#374151',
+          fontSize: 14,
+          padding: 16,
+          borderRadius: 8,
+          fontFamily: 'Inter',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }
+      });
+    } else if (isAddingElement === 'expandableNote') {
+      addElement({
+        type: 'expandableNote',
+        position: { x, y },
+        size: { width: 200, height: 100 },
+        content: 'This note can expand when clicked!\n\nAdd more content here and it will be revealed when expanded.',
+        isExpanded: false,
+        metadata: {
+          collapsedSize: { width: 200, height: 100 },
+          expandedSize: { width: 400, height: 300 }
+        },
+        style: {
+          backgroundColor: '#dbeafe',
+          color: '#1e40af',
+          fontSize: 14,
+          padding: 12,
+          borderRadius: 8,
+          fontFamily: 'Inter',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+        }
+      });
+    } else if (isAddingElement === 'protectedNote') {
+      const password = prompt('Set a password for this protected note:');
+      if (password) {
+        addElement({
+          type: 'protectedNote',
+          position: { x, y },
+          size: { width: 200, height: 120 },
+          content: 'This is protected content!',
+          isLocked: true,
+          metadata: {
+            isProtected: true,
+            passwordHash: btoa(password) // Simple base64 encoding (not secure for production)
+          },
+          style: {
+            backgroundColor: '#fef2f2',
+            color: '#dc2626',
+            fontSize: 14,
+            padding: 12,
+            borderRadius: 8,
+            fontFamily: 'Inter',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }
+        });
+      }
     } else if (isAddingElement === 'sticker') {
       addElement({
         type: 'sticker',

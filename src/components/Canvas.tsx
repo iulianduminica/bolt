@@ -34,7 +34,7 @@ export const Canvas = forwardRef<HTMLDivElement, CanvasProps>(({
   });
 
   // Element dragging
-  const { handleMouseDown: handleElementDrag } = useDragAndDrop({
+  const { handleMouseDown: handleElementDrag, handleResizeStart, handleRotateStart } = useDragAndDrop({
     onUpdate: onElementUpdate,
     onDragStart: () => setIsDragging(true),
     onDragEnd: () => setIsDragging(false)
@@ -98,6 +98,14 @@ export const Canvas = forwardRef<HTMLDivElement, CanvasProps>(({
             onMouseDown={(e) => {
               e.stopPropagation();
               handleMouseDown(e, element.id);
+            }}
+            onResizeStart={(e, handle) => {
+              e.stopPropagation();
+              handleResizeStart(e, element.id, handle);
+            }}
+            onRotateStart={(e) => {
+              e.stopPropagation();
+              handleRotateStart(e, element.id);
             }}
             onUpdate={(updates) => onElementUpdate(element.id, updates)}
             onDelete={() => onElementDelete(element.id)}

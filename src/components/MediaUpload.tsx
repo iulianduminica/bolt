@@ -119,7 +119,8 @@ export const MediaUpload: React.FC<MediaUploadProps> = ({ onUpload, onClose }) =
         title: title || 'Media',
         description: description,
         timestamp: new Date().toISOString(),
-        url: url.trim()
+        url: url.trim(),
+        isEmbedded: type === 'music'
       },
       style: {
         borderRadius: 12,
@@ -298,7 +299,7 @@ export const MediaUpload: React.FC<MediaUploadProps> = ({ onUpload, onClose }) =
               
               <button
                 onClick={() => onUpload({
-                  type: 'music',
+                  type: 'youtube',
                   position: { x: 140, y: 140 },
                   size: { width: 320, height: 180 },
                   content: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
@@ -306,7 +307,8 @@ export const MediaUpload: React.FC<MediaUploadProps> = ({ onUpload, onClose }) =
                     title: 'Sample YouTube Video',
                     description: 'Click to watch on YouTube',
                     url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    isEmbedded: false
                   },
                   style: {
                     borderRadius: 12,
@@ -322,6 +324,33 @@ export const MediaUpload: React.FC<MediaUploadProps> = ({ onUpload, onClose }) =
               </button>
             </div>
           </div>
+
+          {/* Custom Thumbnail Upload */}
+          {url && (url.includes('youtube.com') || url.includes('youtu.be')) && (
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <Image className="w-4 h-4 text-gray-400" />
+                <h3 className="font-medium text-gray-700">Custom Thumbnail (Optional)</h3>
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      const customThumbnail = event.target?.result as string;
+                      // You can store this in a state variable to use when creating the element
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500">Upload a custom thumbnail image for this YouTube video</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

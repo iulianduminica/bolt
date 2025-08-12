@@ -171,6 +171,22 @@ export const ElementPanel: React.FC<ElementPanelProps> = ({
               </>
             )}
 
+            {/* Rotation */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Rotation</label>
+              <input
+                type="range"
+                min="0"
+                max="360"
+                value={element.rotation || 0}
+                onChange={(e) => onUpdate({
+                  rotation: parseInt(e.target.value)
+                })}
+                className="w-full"
+              />
+              <span className="text-xs text-gray-500">{element.rotation || 0}°</span>
+            </div>
+
             {/* Opacity */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Opacity</label>
@@ -195,6 +211,92 @@ export const ElementPanel: React.FC<ElementPanelProps> = ({
 
         {activeTab === 'content' && (
           <div className="space-y-4">
+            {(element.type === 'note' || element.type === 'label' || element.type === 'textEditor' || element.type === 'expandableNote' || element.type === 'protectedNote') && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
+                <textarea
+                  value={element.content}
+                  onChange={(e) => onUpdate({ content: e.target.value })}
+                  rows={element.type === 'textEditor' ? 6 : 3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+                />
+              </div>
+            )}
+
+            {element.type === 'protectedNote' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Security</label>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => {
+                      const newPassword = prompt('Enter new password:');
+                      if (newPassword) {
+                        onUpdate({
+                          metadata: {
+                            ...element.metadata,
+                            passwordHash: btoa(newPassword)
+                          },
+                          isLocked: true
+                        });
+                      }
+                    }}
+                    className="w-full py-2 px-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm"
+                  >
+                    Change Password
+                  </button>
+                  <button
+                    onClick={() => onUpdate({ isLocked: !element.isLocked })}
+                    className={`w-full py-2 px-3 rounded-lg transition-colors text-sm ${
+                      element.isLocked 
+                        ? 'bg-green-500 text-white hover:bg-green-600' 
+                        : 'bg-gray-500 text-white hover:bg-gray-600'
+                    }`}
+                  >
+                    {element.isLocked ? 'Unlock' : 'Lock'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {element.type === 'expandableNote' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Expanded Size</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="number"
+                    placeholder="Width"
+                    value={element.metadata?.expandedSize?.width || 400}
+                    onChange={(e) => onUpdate({
+                      metadata: {
+                        ...element.metadata,
+                        expandedSize: {
+                          ...element.metadata?.expandedSize,
+                          width: parseInt(e.target.value) || 400,
+                          height: element.metadata?.expandedSize?.height || 300
+                        }
+                      }
+                    })}
+                    className="px-2 py-1 border border-gray-300 rounded text-sm"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Height"
+                    value={element.metadata?.expandedSize?.height || 300}
+                    onChange={(e) => onUpdate({
+                      metadata: {
+                        ...element.metadata,
+                        expandedSize: {
+                          width: element.metadata?.expandedSize?.width || 400,
+                          height: parseInt(e.target.value) || 300
+                        }
+                      }
+                    })}
+                    className="px-2 py-1 border border-gray-300 rounded text-sm"
+                  />
+                </div>
+              </div>
+            )}
+
             {element.metadata?.title !== undefined && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
@@ -275,6 +377,20 @@ export const ElementPanel: React.FC<ElementPanelProps> = ({
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                 />
               </div>
+            </div>
+
+            {/* Rotation */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Rotation</label>
+              <input
+                type="number"
+                min="0"
+                max="360"
+                value={Math.round(element.rotation || 0)}
+                onChange={(e) => onUpdate({ rotation: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+              <span className="text-xs text-gray-500">0-360 degrees</span>
             </div>
           </div>
         )}
